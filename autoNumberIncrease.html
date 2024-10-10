@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll to Count</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      height: 2000px; /* Make the page scrollable */
+    }
+    #number-display {
+      font-size: 50px;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="number-display">500</div> <!-- Start from 500 -->
+
+  <script>
+    $(document).ready(function(){
+      let number = 500; // Start from 500
+      const target = 560; // The target number to count up to
+      const duration = 500; // Duration in milliseconds (1 second)
+      let isCounting = false; // To prevent multiple triggers at once
+      let hasScrolled = false; // To prevent counting multiple times
+
+      // Function to animate the number counting
+      function animateCount() {
+        if (isCounting || hasScrolled) return; // Prevent re-triggering while already counting or after first scroll
+        isCounting = true;
+        hasScrolled = true; // Mark that the user has scrolled once
+
+        let increment = (target - number) / (duration / 10); // Calculate increment value
+        let count = number;
+
+        // Set an interval to update the number every 10ms
+        let counterInterval = setInterval(function(){
+          count += increment;
+          if (count >= target) {
+            count = target; // Ensure it stops at 560
+            clearInterval(counterInterval); // Stop the counting
+            isCounting = false; // Allow future counting
+          }
+          $('#number-display').text(Math.floor(count)); // Update displayed number
+        }, 10); // Update every 10ms for smooth animation
+      }
+
+      // Trigger counting only once when the user scrolls
+      $(window).scroll(function() {
+        animateCount();
+      });
+    });
+  </script>
+
+</body>
+</html>
